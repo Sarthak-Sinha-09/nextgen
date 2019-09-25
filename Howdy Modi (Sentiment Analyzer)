@@ -1,0 +1,42 @@
+install.packages("SnowballC")
+install.packages("tm")
+install.packages("twitteR")
+install.packages("syuzhet")
+library("SnowballC")
+library("tm")
+library("twitteR")
+library("syuzhet")
+consumer_key<- "eq2JKDoeQwGHe8C6jKnniHij6"
+consumer_secret<- "jPAfatPN8hy3kMrEM3ZvfztlsB7M9wS6eODvzvwAGEAWvVrJF0"
+access_token<- "713021543392145408-fpw5Z1LfBu6oLKAlkzfKY36sdcbqJMp"
+access_secret<- "M7Om14WS1rLxrJEbtsrOns1yyCcKAQbrcXUECGeE8SFOA"
+tweets<- userTimeline("howdymodi", n=200)
+n.tweet <- length(tweets)
+tweets.df <- twListToDF(tweets)
+head(tweets.df)
+head(tweets.df$text)
+tweets.df$text
+
+tweets.df2 <- gsub("http.*","",tweets.df$text)
+tweets.df2 <- gsub("https.*","",tweets.df2)
+
+tweets.df2 <- gsub("#.*","",tweets.df2)
+tweets.df2 <- gsub("@.*","",tweets.df2)
+
+head(tweets.df2)
+word.df <- as.vector(tweets.df2)
+emotion.df <- get_nrc_sentiment(word.df)
+emotion.df2 <- cbind(tweets.df2, emotion.df)
+head(emotion.df2)
+sent.value <- get_sentiment(word.df)
+most.positive <- word.df[sent.value ==max(sent.value)]
+most.positive
+
+most.negative<- word.df[sent.value <= min(sent.value)]
+most.positive
+positive.tweets <- word.df[sent.value > 0]
+head(positive.tweets)
+negative.tweets <- word.df[sent.value <0]
+head(negative.tweets)
+neutral.tweets <- word.df[sent.value == 0]
+head(neutral.tweets)
