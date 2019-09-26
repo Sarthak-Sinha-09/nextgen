@@ -1,38 +1,50 @@
-install.packages("SnowballC")
-install.packages("tm")
-install.packages("twitteR")
-install.packages("syuzhet")
+#Installing packages
+install.packages("SnowballC")#For text mining
+install.packages("tm")#For text mining
+install.packages("twitteR")#To extract tweets from twitter!
+install.packages("syuzhet")#For sentiment analysis
+
+#Loading Libraries
 library("SnowballC")
 library("tm")
 library("twitteR")
 library("syuzhet")
+
+#First we need to generate the API from twitter to retrieve data(Tweets).
+#Use the link "https://developer.twitter.com/en/apps".
+#Provide the information regarding the usage of your application.
+#You will get the Consumer key, Consumer Secret key, Access token, Access token secret from the API
+
 consumer_key<- "eq2JKDoeQwGHe8C6jKnniHij6"
 consumer_secret<- "jPAfatPN8hy3kMrEM3ZvfztlsB7M9wS6eODvzvwAGEAWvVrJF0"
 access_token<- "713021543392145408-fpw5Z1LfBu6oLKAlkzfKY36sdcbqJMp"
 access_secret<- "M7Om14WS1rLxrJEbtsrOns1yyCcKAQbrcXUECGeE8SFOA"
+
+#userTimeline is a function used to access various time lines of the user.
+
 tweets<- userTimeline("howdymodi", n=200)
-n.tweet <- length(tweets)
-tweets.df <- twListToDF(tweets)
-head(tweets.df)
+#here the user is "@howdymodi" and 'n' is the number of tweets retrieved!
+
+n.tweet <- length(tweets) # Calculating the length of the tweets
+tweets.df <- twListToDF(tweets) # Converting an object from Twitter class to Data Frame
+head(tweets.df)# To view the top rows of the data frame
 head(tweets.df$text)
-tweets.df$text
 
-tweets.df2 <- gsub("http.*","",tweets.df$text)
-tweets.df2 <- gsub("https.*","",tweets.df2)
+tweets.df2 <- gsub("http.*","",tweets.df$text)#cleaning data for "http"
+tweets.df2 <- gsub("https.*","",tweets.df2)#cleaning data for "https"
+tweets.df2 <- gsub("#.*","",tweets.df2)#cleaning data for "#"
+tweets.df2 <- gsub("@.*","",tweets.df2)#cleaning data for "@"
 
-tweets.df2 <- gsub("#.*","",tweets.df2)
-tweets.df2 <- gsub("@.*","",tweets.df2)
-
-head(tweets.df2)
-word.df <- as.vector(tweets.df2)
-emotion.df <- get_nrc_sentiment(word.df)
-emotion.df2 <- cbind(tweets.df2, emotion.df)
+head(tweets.df2)#Viewing the cleaned data
+word.df <- as.vector(tweets.df2)#Storing tweets as vector
+emotion.df <- get_nrc_sentiment(word.df)#Using the NRC sentiment dictionary to calculate the different emotions
+emotion.df2 <- cbind(tweets.df2, emotion.df)#Combing the two columns
 head(emotion.df2)
-sent.value <- get_sentiment(word.df)
-most.positive <- word.df[sent.value ==max(sent.value)]
+sentiment.value <- get_sentiment(word.df)#Using the get sentiment function to iterate over the string and retrieving  a sentiment.
+most.positive <- word.df[sent.value ==max(sent.value)]# Calculating most psossitive sentiment
 most.positive
 
-most.negative<- word.df[sent.value <= min(sent.value)]
+most.negative<- word.df[sent.value <= min(sent.value)]# Calculating most negative sentiment
 most.positive
 positive.tweets <- word.df[sent.value > 0]
 head(positive.tweets)
@@ -40,3 +52,6 @@ negative.tweets <- word.df[sent.value <0]
 head(negative.tweets)
 neutral.tweets <- word.df[sent.value == 0]
 head(neutral.tweets)
+
+
+
