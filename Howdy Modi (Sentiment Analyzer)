@@ -1,3 +1,8 @@
+#I have created a Twitter API using my twitter account.
+#We will be analyzing sentiments from the tweets that were made out from the handle "howdymodi".
+#We will get to know about the sentiments over these tweets.
+
+
 #Installing packages
 install.packages("SnowballC")#For text mining
 install.packages("tm")#For text mining
